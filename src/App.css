@@ -1,0 +1,67 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 10px;
+}
+
+.box-container {
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  height: 70%;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 5px solid red;
+  width: 50%;
+  height: 100%;
+  margin: 0 10px;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.WINNER {
+  border-color: green;
+  color: green;
+}
+
+.LOSER {
+  border-color: red;
+  color: red;
+}
+
+.draw {
+  border-color: black;
+  color: black;
+}
+
+.image {
+  width: 50%;
+  height: 50%;
+}
+
+.icon-container {
+  display: flex;
+}
+
+.icon {
+  margin: 15px 10px;
+}
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.result {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+}
