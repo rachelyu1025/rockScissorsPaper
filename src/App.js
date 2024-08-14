@@ -92,7 +92,7 @@ function App() {
     }
   };
 
-  // onClick 실행함수
+  // 가위바위보 실행함수
   const play = (userChoice) => {
     setUser((prev) => ({ ...prev, choice: userChoice }));
 
@@ -109,11 +109,26 @@ function App() {
     }
   };
 
+  // 초기화 함수
+  const handleReset = () => {
+    setUser((prev) => ({ ...prev, choice: null, score: 0 }));
+    setComputer((prev) => ({ ...prev, choice: null, score: 0 }));
+    setIsUserWin((prev) => null);
+    setIsDraw((prev) => null);
+  };
+
   return (
     <div className='container'>
-      {/* title */}
-      <div className='title-container'>
-        <span className='title'>가위! 바위! 보!</span>
+      <div className='reset-container'>
+        {/* title */}
+        <div className='title-container'>
+          <span className='title'>가위! 바위! 보!</span>
+        </div>
+
+        {/* Reset Button */}
+        <button onClick={() => handleReset()} className='reset'>
+          RESET
+        </button>
       </div>
 
       {/* Boxes */}
