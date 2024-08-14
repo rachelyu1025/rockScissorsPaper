@@ -18,106 +18,138 @@ import {
 */
 
 function App() {
-  const [myChoice, setMyChoice] = useState('');
-  const [comChoice, setComChoice] = useState('');
-  const [myResult, setMyResult] = useState('');
-  const [comResult, setComResult] = useState('');
+  const [user, setUser] = useState({
+    name: 'user',
+    choice: null,
+    score: 0,
+  });
 
-  const handArray = ['scissor', 'rock', 'paper'];
+  const [computer, setComputer] = useState({
+    name: 'computer',
+    choice: null,
+    score: 0,
+  });
+
+  const [isUserWin, setIsUserWin] = useState(null);
+  const [isDraw, setIsDraw] = useState(null);
+
+  const handArray = ['scissors', 'rock', 'paper'];
 
   // 컴퓨터 동작 함수
   const getRandomHand = () => {
     const choice = Math.floor(Math.random() * handArray.length);
-    setComChoice(() => handArray[choice]);
+
+    return handArray[choice];
   };
 
-  // 동작 선택 함수
-  const handleClick = (id) => {
-    setMyChoice(() => id);
-    getRandomHand();
+  // 승패 비교함수
+  const compareChoice = (userChoice, computerChoice) => {
+    if (isDraw) setIsDraw(false);
+
+    switch (userChoice) {
+      case 'scissors':
+        if (computerChoice === 'paper') {
+          setIsUserWin((prev) => true);
+
+          const prevScore = user.score;
+          setUser((prev) => ({ ...prev, score: prevScore + 1 }));
+        } else {
+          setIsUserWin((prev) => false);
+          const prevScore = computer.score;
+          setComputer((prev) => ({ ...prev, score: prevScore + 1 }));
+        }
+
+        break;
+
+      case 'rock':
+        if (computerChoice === 'scissors') {
+          setIsUserWin((prev) => true);
+
+          const prevScore = user.score;
+          setUser((prev) => ({ ...prev, score: prevScore + 1 }));
+        } else {
+          setIsUserWin((prev) => false);
+          const prevScore = computer.score;
+          setComputer((prev) => ({ ...prev, score: prevScore + 1 }));
+        }
+
+        break;
+      case 'paper':
+        if (computerChoice === 'rock') {
+          setIsUserWin((prev) => true);
+
+          const prevScore = user.score;
+          setUser((prev) => ({ ...prev, score: prevScore + 1 }));
+        } else {
+          setIsUserWin((prev) => false);
+          const prevScore = computer.score;
+          setComputer((prev) => ({ ...prev, score: prevScore + 1 }));
+        }
+
+        break;
+      default:
+        setIsUserWin(null);
+    }
   };
 
-  useEffect(() => {
-    const compareChoice = () => {
-      switch (myChoice) {
-        case 'scissor':
-          if (comChoice === 'paper') {
-            setMyResult(() => 'WINNER');
-            setComResult(() => 'LOSER');
-          } else {
-            setMyResult(() => 'LOSER');
-            setComResult(() => 'WINNER');
-          }
-          break;
+  // onClick 실행함수
+  const play = (userChoice) => {
+    setUser((prev) => ({ ...prev, choice: userChoice }));
 
-        case 'rock':
-          if (comChoice === 'scissor') {
-            setMyResult(() => 'WINNER');
-            setComResult(() => 'LOSER');
-          } else {
-            setMyResult(() => 'LOSER');
-            setComResult(() => 'WINNER');
-          }
+    const computerChoice = getRandomHand();
+    setComputer((prev) => ({ ...prev, choice: computerChoice }));
 
-          break;
-        case 'paper':
-          if (comChoice === 'rock') {
-            setMyResult(() => 'WINNER');
-            setComResult(() => 'LOSER');
-          } else {
-            setMyResult(() => 'LOSER');
-            setComResult(() => 'WINNER');
-          }
-
-          break;
-        default:
-          setMyResult(() => '');
-          setComResult(() => '');
-      }
-    };
-
-    // 승자 판독 함수
-    const getWinner = () => {
-      if (myChoice === '' || comChoice === '') {
-        setMyResult(() => '');
-        setComResult(() => '');
-      } else if (myChoice !== comChoice) compareChoice();
-      else {
-        setMyResult(() => 'draw');
-        setComResult(() => 'draw');
-      }
-    };
-
-    getWinner();
-  }, [myChoice, comChoice]);
+    if (!userChoice || !computerChoice) {
+      setIsUserWin((prev) => null);
+      setIsDraw((prev) => null);
+    } else if (userChoice !== computerChoice)
+      compareChoice(userChoice, computerChoice);
+    else {
+      setIsDraw(true);
+    }
+  };
 
   return (
     <div className='container'>
+      {/* title */}
+      <div className='title-container'>
+        <span className='title'>가위! 바위! 보!</span>
+      </div>
+
+      {/* Boxes */}
       <div className='box-container'>
-        <Box name={`user`} hand={myChoice} result={myResult} />
-        <Box name={`computer`} hand={comChoice} result={comResult} />
+        <Box state={user} isWin={isUserWin} isDraw={isDraw} />
+        <Box state={computer} isWin={!isUserWin} isDraw={isDraw} />
       </div>
 
       {/* icons */}
       <div className='icon-container'>
         <Icon
-          id={`scissor`}
-          onClick={handleClick}
+          id={`scissors`}
+          onClick={play}
           name={faHandScissors}
-          size={`3x`}
+          size={`2x`}
         />
-        <Icon
-          id={`rock`}
-          onClick={handleClick}
-          name={faHandBackFist}
-          size={`3x`}
-        />
-        <Icon id={`paper`} onClick={handleClick} name={faHand} size={`3x`} />
+        <Icon id={`rock`} onClick={play} name={faHandBackFist} size={`2x`} />
+        <Icon id={`paper`} onClick={play} name={faHand} size={`2x`} />
       </div>
 
       {/* result */}
       <div className='result'>
-        <span>{myResult}</span>
+        <span>
+          {isDraw
+            ? 'DRAW'
+            : isUserWin === null
+            ? null
+            : isUserWin
+            ? '😎 You WIN!'
+            : '💻 Win'}
+        </span>
+      </div>
+
+      {/* score */}
+      <div className='score'>
+        <span>{`${user.score}:${computer.score}`}</span>
       </div>
     </div>
   );
