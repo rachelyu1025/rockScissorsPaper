@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Box from './components/Box';
 import Icon from './components/Icon';
 
